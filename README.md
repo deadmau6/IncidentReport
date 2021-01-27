@@ -13,10 +13,10 @@ Fetch Emergency incidents with additional data.
 ### TODOs {#todos}
 
  - [X] Download and Setup environment
- - [ ] Create Weather API Interface
+ - [X] Create Weather API Interface
  - [ ] Create Incident Report Interface
  - [ ] Create Endpoints for API requests
- - [ ] Document installation process
+ - [X] Document installation process
  - [ ] Create Integration tests for API
  - [ ] Security considerations
  - [ ] Data storage considerations
