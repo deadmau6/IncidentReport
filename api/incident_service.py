@@ -1,8 +1,12 @@
 from .connections import Mongo
+from .weather_service import WeatherService
+from datetime import timedelta
+import json
 
 class IncidentService:
 
     def __init__(self, **kwargs):
+        self.weather = WeatherService()
         self.collection = 'incidents'
 
     def add_incident(self, incident):
@@ -12,16 +16,37 @@ class IncidentService:
             if not collect.find_one(incident):
                 collect.insert_one(incident)
 
+    def enrich_data(self, data):
+        # Set time frame based on event opening and closing.
+        self.weather.start = data['description']['event_opened']
+        self.weather.end = data['description']['event_closed']
+        # Check that there is at least one hour of data.
+        diff = self.weather.end - self.weather.start
+        if diff.total_seconds() < 3600:
+            self.weather.end = self.weather.end + timedelta(hours=1)
+        # Get the location and set the nearest station.
+        loc = {'latitude': data['address']['latitude'], 'longitude': data['address']['longitude']}
+        self.weather.set_stations(loc)
+        # Get the station information.
+        station_info = self.weather.station
+        weather_info = self.weather.get_hourly_data()
+        data['weather'] = {}
+        data['weather']['station'] = station_info.to_dict()
+        data['weather']['dataframe'] = json.loads(weather_info.to_json())
+        return data
+
+
     def query_incident(self, query):
         with Mongo() as db:
             collect = db[self.collection]
-            return collect.find_one(query, {'_id': 0})
+            data = collect.find_one(query, {'_id': 0})
+        return self.enrich_data(data)
 
     def query_incidents(self, query):
-        print(query)
         with Mongo() as db:
             collect = db[self.collection]
-            return list(collect.find(query, {'_id': 0}))
+            res = list(collect.find(query, {'_id': 0}))
+        return [self.enrich_data(entry) for entry in res]
 
     @staticmethod
     def address_query_builder(*args):
