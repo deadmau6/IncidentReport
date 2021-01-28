@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 from datetime import datetime
 from .query_model import Address, Description
 from .incident_service import IncidentService
@@ -11,6 +11,8 @@ async def query_incident_by_id(incident_number: str):
     query = {'description.incident_number': incident_number}
     service = IncidentService()
     result = service.query_incident(query)
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Could not find Incident with id {incident_number}")
     return result
 
 @router.post("/incidents/")
@@ -28,6 +30,8 @@ async def query_incidents(description: Optional[Description] = None, address: Op
                 query[f"address.{k}"] = v
     service = IncidentService()
     results = service.query_incidents(query)
+    if results is None:
+        raise HTTPException(status_code=404, detail=f"Could not find Incident with query: {query}")
     return {'results': results}
 
 @router.get("/incidents/address/")
@@ -72,6 +76,8 @@ async def query_incidents_by_address(
         common_place_name)
     service = IncidentService()
     results = service.query_incidents(query)
+    if results is None:
+        raise HTTPException(status_code=404, detail=f"Could not find Incident with address query: {query}")
     return {'results': results}
 
 @router.get("/incidents/description/")
@@ -112,4 +118,6 @@ async def query_incidents_by_description(
     # Get results
     service = IncidentService()
     results = service.query_incidents(query)
+    if results is None:
+        raise HTTPException(status_code=404, detail=f"Could not find Incident with description query: {query}")
     return {'results': results}

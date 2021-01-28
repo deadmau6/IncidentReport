@@ -17,6 +17,8 @@ class IncidentService:
                 collect.insert_one(incident)
 
     def enrich_data(self, data):
+        if data is None:
+            return None
         # Set time frame based on event opening and closing.
         self.weather.start = data['description']['event_opened']
         self.weather.end = data['description']['event_closed']
@@ -46,6 +48,8 @@ class IncidentService:
         with Mongo() as db:
             collect = db[self.collection]
             res = list(collect.find(query, {'_id': 0}))
+        if len(res) == 0:
+            return None
         return [self.enrich_data(entry) for entry in res]
 
     @staticmethod
