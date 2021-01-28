@@ -14,12 +14,12 @@ Fetch Emergency incidents with additional data.
 
  - [X] Download and Setup environment
  - [X] Create Weather API Interface
- - [ ] Create Incident Report Interface
- - [ ] Create Endpoints for API requests
+ - [X] Create Incident Report Interface
+ - [X] Create Endpoints for API requests
  - [X] Document installation process
  - [ ] Create Integration tests for API
  - [ ] Security considerations
- - [ ] Data storage considerations
+ - [X] Data storage considerations
  - [ ] Possible Improvements
 
 ### Setup for Ubuntu {#setup-for-ubuntu}
@@ -33,6 +33,7 @@ There are _two_ ways to install and run the application. **One** is to install a
  * [**Python3.6+**](https://realpython.com/installing-python/)
  * [**pip installation**](https://linuxize.com/post/how-to-install-pip-on-ubuntu-20.04/)
  * [**Pipenv installation**](https://pipenv.pypa.io/en/latest/install/#pragmatic-installation-of-pipenv) _(optional, but **recommended**)_
+ * [**MongoDB Community Edition installation**](https://docs.mongodb.com/manual/installation/)
 
 #### Installing:
 
@@ -51,12 +52,14 @@ _**Without Pipenv:**_
 #### Running:
 
  1. If you have `pipenv` then you can start your shell with `pipenv shell`, _**also**_ if you have `pipenv` then you can run the commands normally but just pre-append `pipenv run` _(i.e. `pipenv run uvicorn main:app`)_.
+
+ 2. Make sure that **mongodb is running locally** and if you want to setup the DB with some data you can use the `init_db.py` tool. By default it loads data from `./tests/data` into the DB. _But_ you can easily add more json reports by running `python3 init_db.py -f /path/to/report.json`.
  
- 2. To start the API simply run `uvicorn main:app`. _(you can learn more about `uvicorn`  and `FastAPI` from the "Additional Dependencies information" below)_
+ 3. To start the API simply run `uvicorn main:app`. _(you can learn more about `uvicorn`  and `FastAPI` from the "Additional Dependencies information" below)_
 
- 3. Next you can make requests to the localhost server: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+ 4. Next you can make requests to the localhost server: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
- 4. And you can view the endpoint documentation (SwaggerUI) here: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) or the ReDoc version: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+ 5. And you can view the endpoint documentation (SwaggerUI) here: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) or the ReDoc version: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 #### Additional Dependencies information:
 
