@@ -73,7 +73,7 @@ To run the integration tests simply run `pytest` from the main directory _(or if
 
 ### Improvements {#improvements}
 
-Here are some thinkge I would have done if I had more time:
+Here are some things I would have done if I had more time:
 
  * Clean up the code base and add more descriptions for each method/class.
  * Expand and improve the Data validation models. Both `Query` and `Field` have `description` attributes, I probably would have started there.
