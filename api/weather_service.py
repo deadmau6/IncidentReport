@@ -26,7 +26,8 @@ class WeatherService:
         # Stations
         self.granularity = kwargs.get('granularity', 'hourly')
         self._stations = Stations()
-        self.set_stations()
+        if kwargs.get('auto_load', False):
+            self.set_stations()
 
     @property
     def location(self):
@@ -53,7 +54,9 @@ class WeatherService:
 
     @start.setter
     def start(self, start):
-        if start:
+        if isinstance(start, datetime):
+            self._start = start
+        elif start:
             try:
                 self._start = datetime.strptime(start, "%Y-%m-%d")
             except ValueError:
@@ -67,7 +70,9 @@ class WeatherService:
 
     @end.setter
     def end(self, end):
-        if end:
+        if isinstance(end, datetime):
+            self._end = end
+        elif end:
             try:
                 self._end = datetime.strptime(end, "%Y-%m-%d")
             except ValueError:
