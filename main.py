@@ -1,5 +1,8 @@
 from fastapi import FastAPI
-from api import incidents
+try:
+    from .api import incidents
+except ImportError:
+    from api import incidents
 
 app = FastAPI()
 
